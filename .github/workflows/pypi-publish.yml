@@ -12,16 +12,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-          
-      - name: Install required dependencies
-        run: |
+
+      - name: Build Pypi Files
+        run: |  
           pip install --upgrade pip
           pip install --upgrade setuptools
           pip install wheel
           pip install twine
-
-      - name: Build Pypi Files
-        run: |  
           git config --global user.name "${{secrets.GIT_USER}}"
           git config --global user.email "${{secrets.GIT_GMAIL}}"
           rm -rf build dist gunfolds.egg-info
