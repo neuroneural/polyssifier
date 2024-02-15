@@ -24,6 +24,8 @@ setup(
     version=__version__,
 
     description='Data exploration tool for assessing optimal classification methods',
+    long_description_content_type="text/markdown",
+    long_description=description,
 
     # The project's main homepage.
     url='https://github.com/alvarouc/polyssifier',
