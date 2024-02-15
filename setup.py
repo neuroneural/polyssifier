@@ -14,6 +14,8 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 __version__ = "0.0.1"
 exec(open('version.py').read())
+with open('README.md') as description:
+    description = description.read()
 
 setup(
     name='polyssifier',
