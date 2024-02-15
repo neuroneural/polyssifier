@@ -64,6 +64,8 @@ setup(
     # What does your project relate to?
     keywords='classification machine learning data science',
 
+    include_package_data=True, # Include files listed in MANIFEST.in
+    
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=['polyssifier', ],
@@ -73,5 +75,5 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=['pandas', 'sklearn', 'numpy', 'matplotlib'],
-
-)
+    
+    zip_safe=False) # Override annoying default behavior of easy_install.
