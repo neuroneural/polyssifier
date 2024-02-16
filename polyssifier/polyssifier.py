@@ -85,7 +85,7 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
 
     # Parallel processing of tasks
     
-    if __name__ == '__polyssifier.py__':
+    if __name__ == 'polyssifier.py':
 
         manager = Manager()
         args = manager.list()
