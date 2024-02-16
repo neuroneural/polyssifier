@@ -84,14 +84,15 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
     kf = list(skf.split(np.zeros(data.shape[0]), label))
 
     # Parallel processing of tasks
-    manager = Manager()
-    args = manager.list()
-    args.append({})  # Store inputs
-    shared = args[0]
-    shared['kf'] = kf
-    shared['X'] = data
-    shared['y'] = label
-    args[0] = shared
+    if __name__ == '__main__':
+        manager = Manager()
+        args = manager.list()
+        args.append({})  # Store inputs
+        shared = args[0]
+        shared['kf'] = kf
+        shared['X'] = data
+        shared['y'] = label
+        args[0] = shared
 
     args2 = []
     for clf_name, val in classifiers.items():
@@ -99,13 +100,12 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
             args2.append((args, clf_name, val, n_fold, project_name,
                           save, scoring))
 
-    if __name__ == '__main__':
-        if concurrency == 1:
-            result = list(starmap(fit_clf, args2))
-        else:
-            pool = Pool(processes=concurrency)
-            result = pool.starmap(fit_clf, args2)
-            pool.close()
+    if concurrency == 1:
+        result = list(starmap(fit_clf, args2))
+    else:
+        pool = Pool(processes=concurrency)
+        result = pool.starmap(fit_clf, args2)
+        pool.close()
 
     fitted_clfs = {key: [] for key in classifiers}
 
