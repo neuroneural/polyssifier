@@ -84,6 +84,7 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
     kf = list(skf.split(np.zeros(data.shape[0]), label))
 
     # Parallel processing of tasks
+    print(__name__)
     if __name__ == '__main__':
         manager = Manager()
         args = manager.list()
