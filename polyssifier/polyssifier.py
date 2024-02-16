@@ -107,62 +107,62 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
             result = pool.starmap(fit_clf, args2)
             pool.close()
 
-    fitted_clfs = {key: [] for key in classifiers}
+        fitted_clfs = {key: [] for key in classifiers}
 
-    # Gather results
-    for clf_name in classifiers:
-        coefficients[clf_name] = []
+        # Gather results
+        for clf_name in classifiers:
+            coefficients[clf_name] = []
+            temp = np.zeros((n_class, n_class))
+            temp_pred = np.zeros((data.shape[0], ))
+            temp_prob = np.zeros((data.shape[0], ))
+            clfs = fitted_clfs[clf_name]
+            for n in range(n_folds):
+                train_score, test_score, prediction, prob, confusion,\
+                    coefs, fitted_clf = result.pop(0)
+                clfs.append(fitted_clf)
+                scores.loc[n, (clf_name, 'train')] = train_score
+                scores.loc[n, (clf_name, 'test')] = test_score
+                temp += confusion
+                temp_prob[kf[n][1]] = prob
+                temp_pred[kf[n][1]] = _le.inverse_transform(prediction)
+                coefficients[clf_name].append(coefs)
+
+            confusions[clf_name] = temp
+            predictions[clf_name] = temp_pred
+            test_prob[clf_name] = temp_prob
+
+        # Voting
+        fitted_clfs = pd.DataFrame(fitted_clfs)
+        scores['Voting', 'train'] = np.zeros((n_folds, ))
+        scores['Voting', 'test'] = np.zeros((n_folds, ))
         temp = np.zeros((n_class, n_class))
         temp_pred = np.zeros((data.shape[0], ))
-        temp_prob = np.zeros((data.shape[0], ))
-        clfs = fitted_clfs[clf_name]
-        for n in range(n_folds):
-            train_score, test_score, prediction, prob, confusion,\
-                coefs, fitted_clf = result.pop(0)
-            clfs.append(fitted_clf)
-            scores.loc[n, (clf_name, 'train')] = train_score
-            scores.loc[n, (clf_name, 'test')] = test_score
-            temp += confusion
-            temp_prob[kf[n][1]] = prob
-            temp_pred[kf[n][1]] = _le.inverse_transform(prediction)
-            coefficients[clf_name].append(coefs)
+        for n, (train, test) in enumerate(kf):
+            clf = MyVoter(fitted_clfs.loc[n].values)
+            X, y = data[train, :], label[train]
+            scores.loc[n, ('Voting', 'train')] = _scorer(clf, X, y)
+            X, y = data[test, :], label[test]
+            scores.loc[n, ('Voting', 'test')] = _scorer(clf, X, y)
+            temp_pred[test] = clf.predict(X)
+            temp += confusion_matrix(y, temp_pred[test])
 
-        confusions[clf_name] = temp
-        predictions[clf_name] = temp_pred
-        test_prob[clf_name] = temp_prob
+        confusions['Voting'] = temp
+        predictions['Voting'] = temp_pred
+        test_prob['Voting'] = temp_pred
+        ######
 
-    # Voting
-    fitted_clfs = pd.DataFrame(fitted_clfs)
-    scores['Voting', 'train'] = np.zeros((n_folds, ))
-    scores['Voting', 'test'] = np.zeros((n_folds, ))
-    temp = np.zeros((n_class, n_class))
-    temp_pred = np.zeros((data.shape[0], ))
-    for n, (train, test) in enumerate(kf):
-        clf = MyVoter(fitted_clfs.loc[n].values)
-        X, y = data[train, :], label[train]
-        scores.loc[n, ('Voting', 'train')] = _scorer(clf, X, y)
-        X, y = data[test, :], label[test]
-        scores.loc[n, ('Voting', 'test')] = _scorer(clf, X, y)
-        temp_pred[test] = clf.predict(X)
-        temp += confusion_matrix(y, temp_pred[test])
+        # saving confusion matrices
+        if save:
+            with open('poly_' + project_name + '/confusions.pkl', 'wb') as f:
+                p.dump(confusions, f, protocol=2)
 
-    confusions['Voting'] = temp
-    predictions['Voting'] = temp_pred
-    test_prob['Voting'] = temp_pred
-    ######
-
-    # saving confusion matrices
-    if save:
-        with open('poly_' + project_name + '/confusions.pkl', 'wb') as f:
-            p.dump(confusions, f, protocol=2)
-
-    if verbose:
-        print(scores.astype('float').describe().transpose()
-              [['mean', 'std', 'min', 'max']])
-    return Report(scores=scores, confusions=confusions,
-                  predictions=predictions, test_prob=test_prob,
-                  coefficients=coefficients,
-                  feature_selection=feature_selection)
+        if verbose:
+            print(scores.astype('float').describe().transpose()
+                  [['mean', 'std', 'min', 'max']])
+        return Report(scores=scores, confusions=confusions,
+                      predictions=predictions, test_prob=test_prob,
+                      coefficients=coefficients,
+                      feature_selection=feature_selection)
 
 
 def _scorer(clf, X, y):
