@@ -99,10 +99,10 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
             args2.append((args, clf_name, val, n_fold, project_name,
                           save, scoring))
 
-    if concurrency == 1:
-        result = list(starmap(fit_clf, args2))
-    else:
-        if __name__ == '__main__':
+    if __name__ == '__main__':
+        if concurrency == 1:
+            result = list(starmap(fit_clf, args2))
+        else:
             pool = Pool(processes=concurrency)
             result = pool.starmap(fit_clf, args2)
             pool.close()
