@@ -94,18 +94,18 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
         shared['y'] = label
         args[0] = shared
 
-    args2 = []
-    for clf_name, val in classifiers.items():
-        for n_fold in range(n_folds):
-            args2.append((args, clf_name, val, n_fold, project_name,
-                          save, scoring))
+        args2 = []
+        for clf_name, val in classifiers.items():
+            for n_fold in range(n_folds):
+                args2.append((args, clf_name, val, n_fold, project_name,
+                              save, scoring))
 
-    if concurrency == 1:
-        result = list(starmap(fit_clf, args2))
-    else:
-        pool = Pool(processes=concurrency)
-        result = pool.starmap(fit_clf, args2)
-        pool.close()
+        if concurrency == 1:
+            result = list(starmap(fit_clf, args2))
+        else:
+            pool = Pool(processes=concurrency)
+            result = pool.starmap(fit_clf, args2)
+            pool.close()
 
     fitted_clfs = {key: [] for key in classifiers}
 
