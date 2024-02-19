@@ -55,8 +55,7 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
     _le.fit(label)
     label = _le.transform(label)
     n_class = len(np.unique(label))
-    #logger.info(f'Detected {n_class} classes in label')
-    logger.info('Detected ' + str(n_class) + ' classes in label')
+    logger.info(f'Detected {n_class} classes in label')
 
     if save and not os.path.exists('poly_{}/models'.format(project_name)):
         os.makedirs('poly_{}/models'.format(project_name))
