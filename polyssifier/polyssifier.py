@@ -85,7 +85,6 @@ def poly(data, label, n_folds=10, scale=True, exclude=[],
 
     # Parallel processing of tasks
     
-
     manager = Manager()
     args = manager.list()
     args.append({})  # Store inputs
