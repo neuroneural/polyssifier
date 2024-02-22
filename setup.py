@@ -63,6 +63,12 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
 
     # What does your project relate to?
@@ -78,6 +84,6 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['pandas', 'sklearn', 'numpy', 'matplotlib'],
+    install_requires=['pandas','scikit-learn', 'numpy', 'matplotlib','joblib'],
     
     zip_safe=False) # Override annoying default behavior of easy_install.

@@ -36,7 +36,7 @@ def test_run():
     report = poly(data, label, n_folds=2, verbose=1,
                   feature_selection=False,
                   save=False, project_name='test2')
-    for key, score in report.scores.mean().iteritems():
+    for key, score in report.scores.mean().items():
         assert score < 5, '{} score is too low'.format(key)
 
 
@@ -45,7 +45,7 @@ def test_multiclass():
     report = poly(data, label, n_folds=2, verbose=1,
                   feature_selection=False,
                   save=False, project_name='test3')
-    for key, score in report.scores.mean().iteritems():
+    for key, score in report.scores.mean().items():
         assert score < 5, '{} score is too low'.format(key)
 
         
