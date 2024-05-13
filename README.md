@@ -38,6 +38,24 @@ report.plot_scores()
 report.plot_features(ntop=10)
 ```
 
+### Note for Windows
+Windows and Linux multiprocessing are performed differently.
+To run polyssifier in Windows, an extra line of code must be added.
+The below example is for classification, but the same addition must also be made for regression.
+
+```python
+from polyssifier import poly
+# Load data
+data = np.load("/path/to/data.npy")
+label = np.load("/path/to/labels.npy")
+# Run analysis
+if name == '__main__':
+ report = poly(data,label, n_folds=8)
+ # Plot results
+ report.plot_scores()
+ report.plot_features(ntop=10)
+```
+
 ### In the terminal
 ```bash
 poly data.npy label.npy --concurrency 10
