@@ -30,7 +30,7 @@ setup(
     long_description=description,
 
     # The project's main homepage.
-    url='https://github.com/alvarouc/polyssifier',
+    url='https://github.com/neuroneural/polyssifier',
 
     # Author details
     author='Alvaro Ulloa',
