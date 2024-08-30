@@ -46,7 +46,7 @@ jobs:
 
     - name: Build Pypi Files
       run: |  
-          pip install packaging
+          pip install packaging==24.1
           pip install --upgrade setuptools
           pip install wheel
           pip install twine
