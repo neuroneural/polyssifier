@@ -46,7 +46,7 @@ jobs:
 
     - name: Build Pypi Files
       run: |  
-          pip install --upgrade setuptools
+          pip install --upgrade setuptools==71.0.0
           pip install wheel
           pip install twine
           git config --global user.name "${{secrets.GIT_USER}}"
